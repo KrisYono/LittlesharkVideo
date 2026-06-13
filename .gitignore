@@ -1,0 +1,28 @@
+# OS and editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Large generated exports
+exports/*.mp4
+exports/*.mov
+exports/*.mkv
+exports/*.avi
+exports/*.wav
+exports/*.aiff
+
+# Keep placeholder files
+!exports/.gitkeep
+!assets/.gitkeep
+!assets/audio/.gitkeep
+!assets/images/.gitkeep
+!assets/project-files/.gitkeep
+
+# Temporary render/cache files
+*.tmp
+*.cache
+*.bak
+*.log
+__pycache__/
