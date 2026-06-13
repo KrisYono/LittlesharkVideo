@@ -1,0 +1,11 @@
+{
+  "name": "cute-shark-texas-overlay",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npx --yes hyperframes@0.6.91 preview",
+    "lint": "npx --yes hyperframes@0.6.91 lint",
+    "snapshot": "npx --yes hyperframes@0.6.91 snapshot --at 2,18,38,72,118,150 --describe false",
+    "render": "npx --yes hyperframes@0.6.91 render -o ../6月10日_可爱动效版.mp4"
+  }
+}

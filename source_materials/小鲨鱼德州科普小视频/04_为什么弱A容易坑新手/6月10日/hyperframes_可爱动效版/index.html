@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #fff;
+      }
+
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #fff;
+        font-family: sans-serif;
+      }
+
+      .base-video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1;
+      }
+
+      .overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        pointer-events: none;
+      }
+
+      .sparkle {
+        position: absolute;
+        width: 32px;
+        height: 32px;
+        opacity: 0;
+        transform: scale(0);
+      }
+
+      .sparkle::before,
+      .sparkle::after {
+        content: "";
+        position: absolute;
+        inset: 13px 0;
+        border-radius: 999px;
+        background: #ffe36e;
+        border: 3px solid #262626;
+      }
+
+      .sparkle::after {
+        transform: rotate(90deg);
+      }
+
+      .sparkle.blue::before,
+      .sparkle.blue::after {
+        background: #dff6ff;
+      }
+
+      .sparkle.small {
+        width: 22px;
+        height: 22px;
+      }
+
+      .sparkle.small::before,
+      .sparkle.small::after {
+        inset: 9px 0;
+        border-width: 2px;
+      }
+
+      .doodle-ring {
+        position: absolute;
+        width: 230px;
+        height: 134px;
+        border: 7px solid #ffe36e;
+        border-radius: 52% 46% 50% 48%;
+        opacity: 0;
+        transform: rotate(-8deg) scale(0.82);
+        filter: drop-shadow(0 3px 0 rgba(38, 38, 38, 0.22));
+      }
+
+      .doodle-ring::after {
+        content: "";
+        position: absolute;
+        inset: -16px -12px;
+        border: 4px dashed rgba(38, 38, 38, 0.42);
+        border-radius: 49% 53% 48% 52%;
+      }
+
+      .warning-pop {
+        position: absolute;
+        width: 84px;
+        height: 74px;
+        opacity: 0;
+        transform: scale(0.4) rotate(-10deg);
+      }
+
+      .warning-pop::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: #fff1a8;
+        border: 5px solid #282828;
+        clip-path: polygon(50% 2%, 98% 95%, 2% 95%);
+      }
+
+      .warning-pop::after {
+        content: "!";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 25px;
+        text-align: center;
+        color: #282828;
+        font-size: 32px;
+        font-weight: 900;
+      }
+
+      .chip {
+        position: absolute;
+        width: 72px;
+        height: 72px;
+        border: 5px solid #2c3135;
+        border-radius: 999px;
+        background:
+          radial-gradient(circle at center, #fff 0 27%, transparent 28%),
+          conic-gradient(#7db7ff 0 18deg, #fff 18deg 38deg, #7db7ff 38deg 56deg, #fff 56deg 78deg, #7db7ff 78deg 100deg, #fff 100deg 126deg, #7db7ff 126deg 150deg, #fff 150deg 180deg, #7db7ff 180deg 206deg, #fff 206deg 232deg, #7db7ff 232deg 258deg, #fff 258deg 286deg, #7db7ff 286deg 314deg, #fff 314deg 340deg, #7db7ff 340deg 360deg);
+        opacity: 0;
+        transform: translateY(40px) rotate(-18deg);
+        filter: drop-shadow(0 6px 0 rgba(38, 38, 38, 0.18));
+      }
+
+      .mini-shark {
+        position: absolute;
+        width: 116px;
+        height: 94px;
+        opacity: 0;
+        transform: translateY(28px) scale(0.9);
+        filter: drop-shadow(0 5px 0 rgba(38, 38, 38, 0.16));
+      }
+
+      .mini-shark .body {
+        position: absolute;
+        left: 12px;
+        top: 20px;
+        width: 78px;
+        height: 54px;
+        border: 4px solid #282828;
+        border-radius: 54% 45% 48% 52%;
+        background: #bfefff;
+      }
+
+      .mini-shark .belly {
+        position: absolute;
+        left: 30px;
+        top: 52px;
+        width: 44px;
+        height: 18px;
+        border-radius: 999px;
+        background: #fff;
+        border: 3px solid #282828;
+      }
+
+      .mini-shark .tail {
+        position: absolute;
+        right: 0;
+        top: 34px;
+        width: 34px;
+        height: 34px;
+        background: #bfefff;
+        border: 4px solid #282828;
+        clip-path: polygon(0 50%, 100% 0, 74% 50%, 100% 100%);
+      }
+
+      .mini-shark .fin {
+        position: absolute;
+        left: 48px;
+        top: 4px;
+        width: 28px;
+        height: 30px;
+        background: #bfefff;
+        border: 4px solid #282828;
+        clip-path: polygon(48% 0, 100% 100%, 0 78%);
+      }
+
+      .mini-shark .eye {
+        position: absolute;
+        left: 34px;
+        top: 39px;
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: #282828;
+      }
+
+      .mini-shark .blush {
+        position: absolute;
+        left: 50px;
+        top: 48px;
+        width: 12px;
+        height: 8px;
+        border-radius: 999px;
+        background: #ffc7d4;
+      }
+
+      .emote-line {
+        position: absolute;
+        width: 58px;
+        height: 28px;
+        opacity: 0;
+        transform: rotate(-12deg) scale(0.8);
+      }
+
+      .emote-line span {
+        position: absolute;
+        bottom: 0;
+        width: 5px;
+        height: 26px;
+        border-radius: 999px;
+        background: #292929;
+      }
+
+      .emote-line span:nth-child(1) {
+        left: 4px;
+        transform: rotate(-24deg);
+      }
+
+      .emote-line span:nth-child(2) {
+        left: 26px;
+      }
+
+      .emote-line span:nth-child(3) {
+        right: 4px;
+        transform: rotate(24deg);
+      }
+
+      .top-left {
+        left: 78px;
+        top: 220px;
+      }
+
+      .top-right {
+        right: 82px;
+        top: 220px;
+      }
+
+      .mid-left {
+        left: 96px;
+        top: 760px;
+      }
+
+      .mid-right {
+        right: 96px;
+        top: 760px;
+      }
+
+      .lower-left {
+        left: 112px;
+        top: 1250px;
+      }
+
+      .lower-right {
+        right: 122px;
+        top: 1255px;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="155.806"
+      data-width="1080"
+      data-height="1920"
+    >
+      <video
+        id="source"
+        class="base-video"
+        src="assets/source_keyed.mp4"
+        data-start="0"
+        data-duration="155.806"
+        data-track-index="0"
+        preload="auto"
+        muted
+        playsinline
+      ></video>
+
+      <audio
+        id="source-audio"
+        src="assets/source_keyed.mp4"
+        data-start="0"
+        data-duration="155.806"
+        data-track-index="2"
+        data-volume="1"
+      ></audio>
+
+      <div id="overlay" class="overlay clip" data-start="0" data-duration="155.806" data-track-index="3">
+        <div id="ring-a" class="doodle-ring top-left"></div>
+        <div id="ring-b" class="doodle-ring mid-right"></div>
+        <div id="warn-a" class="warning-pop top-right"></div>
+        <div id="warn-b" class="warning-pop lower-left"></div>
+        <div id="chip-a" class="chip mid-left"></div>
+        <div id="chip-b" class="chip lower-right"></div>
+
+        <div id="shark-a" class="mini-shark lower-right">
+          <div class="tail"></div>
+          <div class="fin"></div>
+          <div class="body"></div>
+          <div class="belly"></div>
+          <div class="eye"></div>
+          <div class="blush"></div>
+        </div>
+
+        <div id="shark-b" class="mini-shark lower-left">
+          <div class="tail"></div>
+          <div class="fin"></div>
+          <div class="body"></div>
+          <div class="belly"></div>
+          <div class="eye"></div>
+          <div class="blush"></div>
+        </div>
+
+        <div id="line-a" class="emote-line top-left"><span></span><span></span><span></span></div>
+        <div id="line-b" class="emote-line mid-right"><span></span><span></span><span></span></div>
+
+        <div id="s1" class="sparkle top-right"></div>
+        <div id="s2" class="sparkle blue small mid-left"></div>
+        <div id="s3" class="sparkle lower-left"></div>
+        <div id="s4" class="sparkle blue small lower-right"></div>
+        <div id="s5" class="sparkle small top-left"></div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      const beats = [
+        1.2, 7.4, 14.4, 21.4, 28.3, 35.4, 42.5, 49.6, 56.7, 63.8, 70.8,
+        77.9, 85.0, 92.1, 99.2, 106.3, 113.4, 120.5, 127.6, 134.7, 141.8,
+        148.9
+      ];
+
+      function pop(target, at, vars = {}) {
+        tl.fromTo(
+          target,
+          { opacity: 0, scale: vars.fromScale || 0.72, rotation: vars.fromRotation || -8 },
+          {
+            opacity: 1,
+            scale: vars.toScale || 1,
+            rotation: vars.toRotation || 0,
+            duration: vars.inDuration || 0.28,
+            ease: "back.out(2.4)"
+          },
+          at
+        );
+        tl.to(
+          target,
+          {
+            opacity: 0,
+            scale: vars.outScale || 0.88,
+            y: vars.outY || -16,
+            duration: vars.outDuration || 0.32,
+            ease: "power2.in"
+          },
+          at + (vars.hold || 1.15)
+        );
+      }
+
+      function twinkle(target, at) {
+        tl.fromTo(
+          target,
+          { opacity: 0, scale: 0, rotation: -35 },
+          { opacity: 1, scale: 1, rotation: 10, duration: 0.24, ease: "back.out(2.6)" },
+          at
+        );
+        tl.to(target, { opacity: 0, scale: 0.2, rotation: 55, duration: 0.28 }, at + 0.55);
+      }
+
+      function chipBounce(target, at) {
+        tl.fromTo(
+          target,
+          { opacity: 0, y: 38, rotation: -18 },
+          { opacity: 1, y: 0, rotation: 10, duration: 0.34, ease: "back.out(2)" },
+          at
+        );
+        tl.to(target, { y: -18, rotation: -8, duration: 0.34, yoyo: true, repeat: 2, ease: "sine.inOut" }, at + 0.36);
+        tl.to(target, { opacity: 0, y: 26, rotation: 18, duration: 0.28, ease: "power2.in" }, at + 1.65);
+      }
+
+      function sharkPeek(target, at, side = 1) {
+        tl.fromTo(
+          target,
+          { opacity: 0, y: 36, x: 40 * side, scale: 0.9, rotation: -5 * side },
+          { opacity: 1, y: 0, x: 0, scale: 1, rotation: 3 * side, duration: 0.38, ease: "back.out(2.1)" },
+          at
+        );
+        tl.to(target, { y: -12, rotation: -3 * side, duration: 0.42, yoyo: true, repeat: 2, ease: "sine.inOut" }, at + 0.4);
+        tl.to(target, { opacity: 0, y: 30, x: 24 * side, duration: 0.3, ease: "power2.in" }, at + 2.0);
+      }
+
+      beats.forEach((beat, index) => {
+        const lane = index % 6;
+        if (lane === 0) {
+          pop("#ring-a", beat + 0.15, { hold: 1.0, fromRotation: -18, toRotation: -8 });
+          twinkle("#s1", beat + 0.28);
+          twinkle("#s5", beat + 0.58);
+        } else if (lane === 1) {
+          sharkPeek("#shark-a", beat + 0.25, 1);
+          twinkle("#s4", beat + 0.52);
+        } else if (lane === 2) {
+          pop("#warn-a", beat + 0.2, { hold: 0.9, fromRotation: 10, toRotation: -8 });
+          pop("#line-a", beat + 0.42, { hold: 0.7, fromScale: 0.6, toScale: 1.05 });
+        } else if (lane === 3) {
+          chipBounce("#chip-a", beat + 0.2);
+          twinkle("#s2", beat + 0.35);
+        } else if (lane === 4) {
+          pop("#ring-b", beat + 0.15, { hold: 1.0, fromRotation: 12, toRotation: 7 });
+          pop("#line-b", beat + 0.46, { hold: 0.7, fromScale: 0.6, toScale: 1.05 });
+        } else {
+          sharkPeek("#shark-b", beat + 0.25, -1);
+          chipBounce("#chip-b", beat + 0.58);
+          twinkle("#s3", beat + 0.48);
+        }
+      });
+
+      tl.to(".sparkle", { rotation: "+=18", duration: 1.8, repeat: 90, ease: "none" }, 0);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

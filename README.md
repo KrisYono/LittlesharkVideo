@@ -20,6 +20,7 @@ LittlesharkVideo/
   docs/               # 项目规划、发布清单、制作规范
   prompts/            # 生成图片、封面、角色素材用的提示词
   scripts/            # 旁白稿、分镜、字幕稿
+  source_materials/   # 已同步的原始小鲨鱼视频素材包
   README.md           # 项目主页说明
 ```
 
@@ -31,6 +32,7 @@ LittlesharkVideo/
 - [scripts/subtitles_zh.srt](scripts/subtitles_zh.srt): 第一版中文字幕
 - [prompts/visual_prompts.md](prompts/visual_prompts.md): 角色、封面、画面生成提示词
 - [docs/publish_checklist.md](docs/publish_checklist.md): 发布前检查清单
+- [source_materials/小鲨鱼德州科普小视频](source_materials/小鲨鱼德州科普小视频): 原始素材、分集图片、视频、音频和发布资料
 
 ## Recommended Workflow
 
@@ -55,3 +57,11 @@ git push -u origin main
 ```
 
 如果你把 GitHub 仓库链接发给我，我可以继续帮你把 remote 命令改成准确版本。
+
+## Media Storage
+
+图片、视频、音频素材已经使用 Git LFS 管理，避免普通 Git 历史过大。第一次克隆仓库后，如果素材没有自动下载，可以运行：
+
+```powershell
+git lfs pull
+```
